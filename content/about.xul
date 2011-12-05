@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?xml-stylesheet href="chrome://global/skin/" type="text/css"?>
+
+<dialog
+	buttons="cancel"
+	id="farky-about-dialog"
+	title="Farky - About"
+	orient="vertical"
+	xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul">
+
+<groupbox align="center" orient="horizontal">
+<vbox>
+  <label value="Farky" style="font-weight: bold; font-size: x-large;"/>
+
+  <separator class="thin"/>
+
+  <label value="Created By:" style="font-weight: bold;"/>
+  <label value="Fnord"/>
+
+  <separator class="thin"/>
+
+  <label value="Currently Maintained By:" style="font-weight: bold;"/>
+  <label value="Cthulhon &lt;flaming.cows@gmail.com&gt;"/>
+  <label value="HansensDisease"/>
+  <label value="RabidDog"/>
+
+  <separator class="thin"/>
+
+  <label value="Special thanks to:" style="font-weight: bold;"/>
+  <label value="tarrant84, Mr. Programmer, darkhorse23, Dimensiation, evulish, SoonerGrad, and Mr. Fuzzypaws"/>
+
+  <separator class="thin"/>
+</vbox>
+
+<spring flex="1"/>
+
+<image src="chrome://farky/skin/farkyb.png"/>
+</groupbox>
+
+</dialog>

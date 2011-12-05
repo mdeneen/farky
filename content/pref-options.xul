@@ -1,0 +1,529 @@
+<?xml version="1.0"?>
+<?xml-stylesheet href="chrome://global/skin/" type="text/css"?>
+<?xml-stylesheet href="chrome://farky/skin/colors.css" type="text/css"?>
+
+<prefwindow id="farky-options-dialog"
+	type="prefwindow"
+	title="Farky - Options"
+	xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul">
+
+
+
+	<prefpane id="prefs_general" label="General" image="chrome://farky/skin/general.png">
+		<preferences>
+			<preference id="pref_headlines"  name="extensions.farky.headlines" inverted="true" type="bool"/>
+			<preference id="pref_comments"   name="extensions.farky.comments"  inverted="true" type="bool"/>
+			<preference id="pref_randicon"   name="extensions.farky.options.randomIcons" inverted="true" type="bool"/>
+			<preference id="pref_linksInNewWindow" name="extensions.farky.linksInNewWindow" type="bool"/>
+			<preference id="pref_widescreen" name="extensions.farky.widescreen" type="bool"/>
+		</preferences>
+
+		<tooltip id="tt_noHeadlines" onpopupshowing="this.height=this.popupBoxObject.height;">
+			<description style="width: 30em">Force Farky to ignore headline pages. This may be useful if Farky runs too slowly on your system, especially with large TotalFark pages.</description>
+		</tooltip>
+		<tooltip id="tt_noComments" onpopupshowing="this.height=this.popupBoxObject.height;">
+			<description style="width: 30em">Force Farky to ignore comment pages. This may be useful if Farky runs too slowly on your system, especially with large comment threads.</description>
+		</tooltip>
+		<tooltip id="tt_randomIcons" onpopupshowing="this.height=this.popupBoxObject.height;">
+			<description style="width: 30em">Instead of using random cliche icons here in the Options dialog, a conventional set of icons will be used.</description>
+		</tooltip>
+		<tooltip id="tt_linksInNewWindow" onpopupshowing="this.height=this.popupBoxObject.height;">
+			<description style="width: 30em">Make all links in comments open in new windows.</description>
+		</tooltip>
+		<tooltip id="tt_widescreen" onpopupshowing="this.height=this.popupBoxObject.height;">
+			<description style="width: 30em">Make readable screen area wider.</description>
+		</tooltip>
+
+
+
+		<hbox>
+			<description style="width: 30em; height: 3em;" flex="1">
+				Farky makes reading Fark.com easier. It helps you track what's going on in the discussion
+				threads, and filter out headlines you don't want to see. For a complete description of what
+				Farky does, see the extension's listing at http://addons.mozilla.org.
+			</description>
+
+			<spacer style="width: 2em;"/>
+
+			<image src="chrome://farky/skin/farkyb.png"/>
+
+		</hbox>
+
+		<!-- Use hbox+spacer so checkbox selection doesn't appear to stretch across entire window. -->
+
+		<hbox>
+			<checkbox preference="pref_headlines" label="Disable headline processing" tooltip="tt_noHeadlines"/>
+			<spacer/>
+		</hbox>
+
+		<hbox>
+			<checkbox preference="pref_comments" label="Disable comment processing" tooltip="tt_noComments"/>
+			<spacer/>
+		</hbox>
+
+		<hbox>
+			<checkbox preference="pref_linksInNewWindow" label="Open comment links in new window" tooltip="tt_linksInNewWindow"/>
+			<spacer/>
+		</hbox>
+
+		<hbox>
+			<checkbox preference="pref_widescreen" label="Make readable screen area wider (requires a Firefox restart)" tooltip="tt_widescreen"/>
+			<spacer/>
+		</hbox>
+
+
+		<spacer style="height: 1em;"/>
+
+		<hbox>
+			<checkbox preference="pref_randicon" label="Disable random Options icons" tooltip="tt_randomIcons"/>
+			<spacer/>
+		</hbox>
+		
+	</prefpane>
+
+
+
+	<prefpane id="prefs_headlines" label="Headlines" image="chrome://farky/skin/headlines.png">
+		<preferences>
+			<preference id="pref_countnew"     name="extensions.farky.headlines.showNewCount"   type="int"/>
+			<preference id="pref_greenbar"     name="extensions.farky.headlines.greenbar"       type="bool"/>
+			<preference id="pref_barcolors"    name="extensions.farky.headlines.greenbarColor"  type="string"/>
+			<preference id="pref_hideslow"     name="extensions.farky.headlines.hideSlow"       type="bool"/>
+			<preference id="pref_hideslowmax"  name="extensions.farky.headlines.hideSlowMax"    type="int"/>
+			<preference id="pref_hideNSFW"     name="extensions.farky.headlines.hideNSFW"       type="bool"/>
+			<preference id="pref_colorblind"   name="extensions.farky.headlines.colorblind"     type="bool"/>
+			<preference id="pref_hidekeyword"  name="extensions.farky.keywords"                 type="bool"/>
+			<preference id="pref_hidelite"     name="extensions.farky.headlines.hideGreenlit"   type="bool"/>
+			<preference id="pref_markhidden"   name="extensions.farky.headlines.markHidden"     type="bool"/>
+			<preference id="pref_filternew"    name="extensions.farky.headlines.filterNew"      type="bool"/>
+			<preference id="pref_filternewthreads" name="extensions.farky.headlines.filterNewThreads" type="bool"/>
+			<preference id="pref_filterstar"   name="extensions.farky.headlines.filterStar"     type="bool"/>
+			<preference id="pref_filterposted" name="extensions.farky.headlines.filterPosted"   type="bool"/>
+		</preferences>
+
+		<tooltip id="tt_markhidden" onpopupshowing="this.height=this.popupBoxObject.height;">
+			<description style="width: 30em">On a headline page, you can right-click and select "Mark All Read" from the popup Farky menu. This option controls how that command applies to hidden (filtered) headlines.</description>
+		</tooltip>
+		<tooltip id="tt_greenbar" onpopupshowing="this.height=this.popupBoxObject.height;">
+			<description style="width: 30em">Produces a striping effect, like a checkbook ledger. This improves visibility with large screens (or small fonts).</description>
+		</tooltip>
+		<tooltip id="tt_commentCount" onpopupshowing="this.height=this.popupBoxObject.height;">
+			<description style="width: 30em">Formats the comment count for a thread, so you can see how many new comments there are. When there are no new comments, only the total is displayed.</description>
+		</tooltip>
+		<tooltip id="tt_hideSlow" onpopupshowing="this.height=this.popupBoxObject.height;">
+			<description style="width: 30em">Hides a headline if the comment count is below the number you specify. This allows you to focus on threads where people are talking.</description>
+		</tooltip>
+		<tooltip id="tt_hideNSFW" onpopupshowing="this.height=this.popupBoxObject.height;">
+			<description style="width: 30em">Hides a headline labeled as "not safe for work", as well as all Boobies and Weeners headlines.</description>
+		</tooltip>
+		<tooltip id="tt_hideKeyword" onpopupshowing="this.height=this.popupBoxObject.height;">
+			<description style="width: 30em">Hides a headline containing a keyword you have defined. You can add a filter in the Farky options, or thru the right-click menu on a headline.</description>
+		</tooltip>
+		<tooltip id="tt_hideLite" onpopupshowing="this.height=this.popupBoxObject.height;">
+			<description style="width: 30em">TotalFark displays headlines which are active on regular Fark in bold green text. You can hide these to focus on the slower TotalFark threads.</description>
+		</tooltip>
+		<tooltip id="tt_filterStar" onpopupshowing="this.height=this.popupBoxObject.height;">
+			<description style="width: 30em">Sets the default state of the filter to show threads you have marked with a star.</description>
+		</tooltip>
+		<tooltip id="tt_filterNew" onpopupshowing="this.height=this.popupBoxObject.height;">
+			<description style="width: 30em">Sets the default state of the filter to show threads with new comments.</description>
+		</tooltip>
+		<tooltip id="tt_filterNewThreads" onpopupshowing="this.height=this.popupBoxObject.height;">
+			<description style="width: 30em">Sets the default state of the filter to show threads that have not been seen before (new submissions).</description>
+		</tooltip>
+		<tooltip id="tt_filterPosted" onpopupshowing="this.height=this.popupBoxObject.height;">
+			<description style="width: 30em">Sets the default state of the filter to show threads you have posted in.</description>
+		</tooltip>
+
+		<tooltip id="tt_colorblind" onpopupshowing="this.height=this.popupBoxObject.height;">
+			<description style="width: 30em">TotalFark headlines may be red or green, depending on admin approval. Users who are red/green colorblind can't tell them apart. This option changes the colors to orange/blue, for better visibility.</description>
+		</tooltip>
+
+		<grid>
+			<columns>
+				<column flex="1" style="min-width: 25em"/>
+				<column flex="1" style="min-width: 25em"/>
+			</columns>
+
+			<rows>
+			    <row>
+				<vbox>
+					<checkbox preference="pref_markhidden" label="Apply 'Mark Read' to filtered items" tooltip="tt_markhidden"/>
+					<hbox tooltip="tt_greenbar">
+						<checkbox preference="pref_greenbar" label="Shade alternating headlines"/>
+						<colorpicker type="button" id="greenbar_colorpicker" preference="pref_barcolors"/>
+					</hbox>
+
+					<checkbox preference="pref_colorblind" label="I am red/green colorblind (for TotalFark)" 							oncommand="FARKY.cssSync(this.checked, 'colorblind');"
+						tooltip="tt_colorblind"/>
+				</vbox>
+
+				<groupbox>
+					<caption label="Comment count"/>
+					<radiogroup preference="pref_countnew" tooltip="tt_commentCount">
+						<radio value="0" label="Normal: (16)"/>
+						<radio value="1" label="Read + Unread: (10 + 6)"/>
+						<radio value="2" label="Unread only: (+6)"/>
+					</radiogroup>
+				</groupbox>
+			    </row>
+
+
+			    <row>
+			      <groupbox>
+				<caption label="Filter when..."/>
+
+				<hbox align="center">
+					<checkbox preference="pref_hideslow" label="Less than" tooltip="tt_hideSlow"/>
+
+					<textbox preference="pref_hideslowmax" id="slowThreadThreshold" size="2" maxlength="2" tooltip="tt_hideSlow"/>
+
+					<label value="comments" tooltip="tt_hideSlow"/>
+				</hbox>
+
+				<checkbox preference="pref_hideNSFW" label="Not safe for work" tooltip="tt_hideNSFW"/>
+
+				<checkbox preference="pref_hidekeyword" label="Keyword is found" tooltip="tt_hideKeyword"/>
+
+				<checkbox preference="pref_hidelite" label="Active on FarkLite (for TotalFark)" tooltip="tt_hideLite"/>
+			      </groupbox>
+
+
+			      <groupbox>
+				<caption label="Clickable filters"/>
+
+				<checkbox preference="pref_filterstar"   label="Star enabled"           tooltip="tt_filterStar"/>
+				<checkbox preference="pref_filternew"    label="New comments enabled"   tooltip="tt_filterNew"/>
+				<checkbox preference="pref_filterposted" label="Posted threads enabled" tooltip="tt_filterPosted"/>
+				<checkbox preference="pref_filternewthreads" label="New threads enabled"   tooltip="tt_filterNewThreads"/>
+
+
+			      </groupbox>
+			    </row>
+			</rows>
+		</grid>
+
+	</prefpane>
+
+
+
+	<prefpane id="prefs_keywords" label="Keyword Filters" image="chrome://farky/skin/keyword.png">
+
+
+		<tree id="filterTree" seltype="single" rows="10" flex="0">
+			<treecols>
+				<treecol label="Keyword" id="keyword" flex="5"/>
+				<splitter class="tree-splitter"/>
+				<treecol label="Found in" flex="1"/>
+				<splitter class="tree-splitter"/>
+				<treecol label="Action" flex="1"/>
+				<splitter class="tree-splitter"/>
+				<treecol label="Color" fixed="true" flex="0"/>
+				<splitter class="tree-splitter"/>
+				<treecol label="Start Time" hidden="true" flex="3"/>
+				<splitter class="tree-splitter"/>
+				<treecol label="Duration" hidden="true" flex="1"/>
+				<splitter class="tree-splitter"/>
+				<treecol label="Expire Time" flex="3"/>
+				<splitter class="tree-splitter"/>
+				<treecol label="Expired?" flex="1"/>
+				<splitter class="tree-splitter"/>
+				<treecol label="Autodelete?" flex="1"/>
+			</treecols>
+
+			<treechildren id="filterTreeContent">
+				<!-- content is filled in here during window init. -->
+			</treechildren>
+		</tree>
+
+		<hbox>
+			<spacer flex="1"/>
+			<button label="Delete"  oncommand="FARKY_OPTIONS.filterEdit('delete');"/>
+			<button label="Edit..." oncommand="FARKY_OPTIONS.filterEdit('modify');"/>
+			<button label="Add..."  oncommand="FARKY_OPTIONS.filterEdit('add');"/>
+		</hbox>
+
+	</prefpane>
+
+
+
+	<prefpane id="prefs_comments" label="Comments" image="chrome://farky/skin/comments.png">
+		<preferences>
+			<preference id="pref_friends"          name="extensions.farky.friends"                  type="bool"/>
+			<preference id="pref_friendsnotes"     name="extensions.farky.friends.notes"            type="bool"/>
+			<preference id="pref_markunread"       name="extensions.farky.comments.markUnread"      type="bool"/>
+			<preference id="pref_markunreadColor"  name="extensions.farky.comments.markUnreadColor" type="string"/>
+			<preference id="pref_markmyname"       name="extensions.farky.comments.markMyName"      type="bool"/>
+			<preference id="pref_scrollread"       name="extensions.farky.comments.scrollRead"      type="bool"/>
+		</preferences>
+
+		<tooltip id="tt_scrollRead" onpopupshowing="this.height=this.popupBoxObject.height;">
+			<description style="width: 30em">Automatically scrolls the window to the first new comment in a thread, so you don't need to search for it.</description>
+		</tooltip>
+		<tooltip id="tt_friends" onpopupshowing="this.height=this.popupBoxObject.height;">
+			<description style="width: 30em">Apply a colored background to comments made by people you have listed as friends.</description>
+		</tooltip>
+		<tooltip id="tt_friendsnotes" onpopupshowing="this.height=this.popupBoxObject.height;">
+			<description style="width: 30em">Display the note you have associated with a friend's name in the header of their comments.</description>
+		</tooltip>
+		<tooltip id="tt_markmyname" onpopupshowing="this.height=this.popupBoxObject.height;">
+			<description style="width: 30em">Display an icon next to the header of every comment that mentions your username.</description>
+		</tooltip>
+		<tooltip id="tt_markUnread" onpopupshowing="this.height=this.popupBoxObject.height;">
+			<description style="width: 30em">Colors the header of the first new comment, so you can easily identify it.</description>
+		</tooltip>
+
+		<grid>
+			<columns>
+				<column flex="1" style="min-width: 25em"/>
+				<column flex="1" style="min-width: 25em"/>
+			</columns>
+
+			<rows>
+			    <row>
+				<vbox>
+					<checkbox preference="pref_scrollread"  label="Scroll to first new comment" tooltip="tt_scrollRead"/>
+				</vbox>
+
+				<groupbox>
+					<caption label="Comment hilighting"/>
+
+					<checkbox preference="pref_friends" label="Color comments from friends" tooltip="tt_friends"/>
+
+					<checkbox preference="pref_friendsnotes" label="Display friend notes in comment header" tooltip="tt_friendsnotes"/>
+
+					<checkbox preference="pref_markmyname" label="Mark comments which mention my username" tooltip="tt_markmyname"/>
+
+					<hbox tooltip="tt_markUnread">
+						<checkbox preference="pref_markunread" label="Color header of first new comment"/>
+						<colorpicker id="markunread_colorpicker" type="button" preference="pref_markunreadColor"/>
+					</hbox>
+
+				</groupbox>
+			    </row>
+			</rows>
+		</grid>
+	</prefpane>
+
+
+
+	<prefpane id="prefs_friends" label="Friends" image="chrome://farky/skin/friends.png">
+		<preferences>
+		</preferences>
+
+		<tree id="friendTree" seltype="single" rows="10" flex="1">
+			<treecols>
+				<treecol id="username" label="Name" primary="true" flex="2"/>
+				<splitter class="tree-splitter"/>
+				<treecol id="category" label="Group" flex="1"/>
+				<splitter class="tree-splitter"/>
+				<treecol id="color" label="Color" flex="1"/>
+				<splitter class="tree-splitter"/>
+				<treecol id="note" label="Note" flex="4"/>
+			</treecols>
+
+			<treechildren id="friendTreeContent">
+				<!-- content is filled in here during window init. -->
+			</treechildren>
+		</tree>
+
+		<hbox>
+			<spacer flex="1"/>
+			<button label="Delete"       oncommand="FARKY_OPTIONS.friendEdit('delete')"/>
+			<button label="Edit..."      oncommand="FARKY_OPTIONS.friendEdit('modify')"/>
+			<button label="Add Group..." oncommand="FARKY_OPTIONS.friendEdit('add', 'group')"/>
+			<button label="Add User..."  oncommand="FARKY_OPTIONS.friendEdit('add', 'user')"/>
+		</hbox>
+
+		<label id="friendCount" value="|"/>
+	</prefpane>
+
+
+
+	<prefpane id="prefs_serverstatus" label="Server Status" image="chrome://farky/skin/serverstatus.png">
+
+
+		<grid>
+			<columns>
+				<!-- need a set width to force columns the same size, else they size (differently), then flex -->
+				<column flex="1" style="min-width: 25em"/>
+				<column flex="1" style="min-width: 25em"/>
+			</columns>
+
+			<rows>
+			    <row flex="1">
+				<vbox>
+				    <hbox>
+					<label value="Fark.com load:"/>
+					<spacer flex="1"/>
+					<progressmeter id="farkload" mode="determined" value="70"/>
+				    </hbox>
+
+				    <hbox>
+					<label value="TotalFark.com load:"/>
+					<spacer flex="1"/>
+					<progressmeter id="totalfarkload" mode="determined" value="0"/>
+				    </hbox>
+				</vbox>
+
+
+				<vbox align="center">
+					<label value="Go banana!"/>
+					<image src="chrome://farky/skin/more_banana_dancing.gif"/>
+				</vbox>
+			    </row>
+
+
+
+			    <row flex="1">
+				    <groupbox>
+					<caption label="Real-time stats"/>
+
+					<grid>
+					    <columns>
+						<column flex="1"/>
+						<column/>
+					    </columns>
+
+					    <rows>
+						<row>
+							<label value="Duplicate submissions"/>
+							<textbox id="dupecounter"  size="12" maxlength="12" style="text-align: right;" readonly="true"/>
+						</row>
+
+						<row>
+							<label value="Stupid comments"/>
+							<textbox id="stupidcounter" size="12" maxlength="12" style="text-align: right;" readonly="true"/>
+						</row>
+
+						<row>
+							<label value="Newsworthy links"/>
+							<textbox id="newscounter" size="12" maxlength="12" style="text-align: right;" readonly="true"/>
+						</row>
+
+						<row>
+							<label value="Beers consumed"/>
+							<textbox id="beercounter" size="12" maxlength="12" style="text-align: right;" readonly="true"/>
+						</row>
+
+					    </rows>
+					</grid>
+				    </groupbox>
+
+				    <groupbox>
+					<caption label="Health monitor"/>
+
+					<grid>
+					    <columns>
+						<column flex="1"/>
+						<column/>
+					    </columns>
+
+					    <rows>
+						<row>
+							<label value="Abe Vigoda"/>
+							<label value="Alive"/>
+						</row>
+						<row>
+							<label value="Generalissimo Francisco Franco"/>
+							<label value="Still dead"/>
+						</row>
+						<row>
+							<label value="Drew Curtis"/>
+							<label value="Drunk"/>
+						</row>
+						<row>
+							<label value="Ford Prefect"/>
+							<label value="Hoopy"/>
+						</row>
+						<row>
+							<label value="Jock Ewing"/>
+							<label value="Dead?"/>
+						</row>
+						<row>
+							<label value=""/>
+							<label id="mysteryseries" style="text-align: right; color: #cccccc;" value="4"/>
+						</row>
+					    </rows>
+					</grid>
+				    </groupbox>
+			    </row>
+			</rows>
+		</grid>
+
+	</prefpane>
+
+
+
+	<prefpane id="prefs_debug" label="Debug" image="chrome://farky/skin/debug.png">
+		<preferences>
+			<preference id="pref_debug"          name="extensions.farky.debug"             type="bool" inverted="true"/>
+			<preference id="pref_logtoconsole"   name="extensions.farky.debug.log"         type="bool"/>
+			<preference id="pref_openconsole"    name="extensions.farky.debug.openConsole" type="bool"/>
+			<preference id="pref_logperf"        name="extensions.farky.debug.logPerf"     type="bool"/>
+			<preference id="FF_pref_console"     name="javascript.options.showInConsole"   type="bool"/>
+			<preference id="FF_pref_strict"      name="javascript.options.strict"          type="bool"/>
+			<preference id="pref_fakefilter"     name="extensions.farky.debug.fakeFilter"  type="bool"/>
+			<preference id="pref_localfile"      name="extensions.farky.debug.localfileAs" type="string"/>
+		</preferences>
+
+		<grid>
+			<columns>
+				<!-- need a set width to force columns the same size, else they size (differently), then flex -->
+				<column flex="1" style="min-width: 25em"/>
+				<column flex="1" style="min-width: 25em"/>
+			</columns>
+
+			<rows>
+			    <row flex="1">
+					<checkbox preference="pref_debug" label="Disable debug mode"/>
+
+					<spacer/>
+			    </row>
+
+
+			    <row flex="1">
+				<groupbox>
+					<caption label="Logging"/>
+					<checkbox preference="pref_logtoconsole" label="Enabled (JavaScript Console)"/>
+					<checkbox preference="pref_openconsole"  label="Open JS Console on startup."/>
+					<checkbox preference="pref_logperf"      label="Show performance info"/>
+				</groupbox>
+
+				<groupbox>
+					<caption label="Firefox Prefs"/>
+					<checkbox preference="FF_pref_console" label="Log extension errors"/>
+					<checkbox preference="FF_pref_strict"  label="Use JavaScript strict mode"/>
+				</groupbox>
+			    </row>
+
+			    <row flex="1">
+				<vbox>
+					<checkbox preference="pref_fakefilter"   label="Show filtered headlines"/>
+				</vbox>
+
+				<groupbox>
+					<caption label="file:// URLs"/>
+					<radiogroup preference="pref_localfile">
+						<radio value="normal"    label="Do not process (normal)" flex="1"/>
+						<radio value="headlines" label="Treat as headline pages" flex="1"/>
+						<radio value="comments"  label="Treat as comment pages"  flex="1"/>
+					</radiogroup>
+				</groupbox>
+			    </row>
+			</rows>
+		</grid>
+
+	</prefpane>
+
+
+
+
+	<!-- Scripts down here because putting them between the prefwindow and prefpane causes out-of-order panes! -->
+	<script type="application/x-javascript" src="chrome://farky/content/data.js"/>
+	<script type="application/x-javascript" src="chrome://farky/content/main.js"/>
+	<script type="application/x-javascript" src="chrome://farky/content/pref-colors.js"/>
+	<script type="application/x-javascript" src="chrome://farky/content/pref-options.js"/>
+
+</prefwindow>
+ 

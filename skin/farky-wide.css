@@ -1,0 +1,45 @@
+@-moz-document	url-prefix(http://www.fark.com/),
+								url-prefix(https://www.fark.com/),
+								url-prefix(http://total.fark.com/),
+								url-prefix(https://total.fark.com/),
+								url-prefix(http://www.foobies.com/),
+								url-prefix(https://www.foobies.com/)
+{
+ #headerMenuContainer { height: 25px !important; }
+ #headerMenu { font-size: 12pt !important; margin-top: -5px !important; }
+ #catMenu { font-size: 12pt !important; margin-top: -12px !important; }
+ #topAd728x90 { display: none !important; height: 0px !important; }
+ #rightAd300x250 { display: none !important; }
+ #rightAd300x250Lower { display: none !important; }
+ #rightColSpacer { width: 100px !important; }
+ #rightCol { width: 100px !important; }
+ #facebook { display: none !important; }
+ #twitter { display: none !important; }
+ #rss { display: none !important; }
+ #hotw { margin-top: -10px !important; }
+ #hotw a { font-size: 10pt !important; }
+ #boxSwap { display: none !important; }
+ #footerFarkLinks { display: none !important; }
+ #alsoOnFarkTable { display: none !important; }
+ 
+ .menuSelected a { font-size: 15pt !important; }
+ .catSelected a { font-size: 15pt !important; }
+ .submitLink { font-size: 15pt !important; }
+ .mainDate { font-size: 12pt !important; margin-top: -10px !important; }
+/* .headlineRow { font-size: 10pt !important; }*/
+/* .headlineRow td { padding: 3px 3px !important; }*/
+ .headlineSourceImage { width: 110px !important; }
+ .sidebarLinks { border: #000000 1px solid !important; background-color: #696969 !important; padding: 5px !important; margin-top: -10px !important; }
+ .sidebarLinks li { width:100% !important; text-align: center !important; font-size: 10pt !important; }
+ .alsoOnFark { display: none !important; }
+ .shoprotator { display: none !important; }
+
+}
+
+@-moz-document	url-prefix(http://www.fark.com/comments),
+								url-prefix(https://www.fark.com/comments)
+{
+ #commentsArea { padding-bottom: 25px !important; } 
+ #commentsHeader { background-color: #696969 !important; } 
+
+}

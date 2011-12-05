@@ -1,0 +1,28 @@
+<?xml version="1.0"?>
+<RDF:RDF xmlns:em="http://www.mozilla.org/2004/em-rdf#"
+         xmlns:NC="http://home.netscape.com/NC-rdf#"
+         xmlns:RDF="http://www.w3.org/1999/02/22-rdf-syntax-ns#">
+  <RDF:Description RDF:about="rdf:#$zv9fS1"
+                   em:id="{ec8030f7-c20a-464f-9b0e-13a3a9e97384}"
+                   em:minVersion="2.0"
+                   em:maxVersion="9.0.*" />
+  <RDF:Description RDF:about="urn:mozilla:install-manifest"
+                   em:id="{9c9c8cff-c707-48b9-b81e-6fceeb4ce43e}"
+                   em:name="Farky"
+                   em:version="2.0 beta2"
+                   em:creator="Fnord"
+                   em:description="Tools to make reading Fark.com easier."
+                   em:homepageURL="http://www.getfarky.com/"
+                   em:updateURL="https://getfarky.com/update/update.rdf"
+                   em:iconURL="chrome://farky/skin/farky.png"
+                   em:optionsURL="chrome://farky/content/pref-options.xul"
+                   em:aboutURL="chrome://farky/content/about.xul">
+    <em:contributor>RabidDog</em:contributor>
+    <em:contributor>evulish</em:contributor>
+    <em:contributor>SoonerGrad</em:contributor>
+    <em:contributor>Cthulhon</em:contributor>
+    <em:contributor>HansensDisease</em:contributor>
+    <em:contributor>Mr. Fuzzypaws</em:contributor>
+    <em:targetApplication RDF:resource="rdf:#$zv9fS1"/>
+  </RDF:Description>
+</RDF:RDF>

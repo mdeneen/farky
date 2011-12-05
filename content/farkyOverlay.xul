@@ -1,0 +1,46 @@
+<?xml version="1.0"?>
+
+<overlay
+	id="farkyOverlay"
+	xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul">
+
+    <script type="application/x-javascript" src="chrome://farky/content/data.js"/>
+    <script type="application/x-javascript" src="chrome://farky/content/main.js"/>
+    <script type="application/x-javascript" src="chrome://farky/content/comments.js"/>
+    <script type="application/x-javascript" src="chrome://farky/content/headlines.js"/>
+
+    <popup id="contentAreaContextMenu">
+	<menu id="farkyContextMenu" label="Farky" position="1" accesskey="F">
+		<menupopup>
+
+			<menuitem
+				id="farkyAddFilter"
+				label="Add Headline Filter..."
+				accesskey="A" 
+				oncommand="FARKY_HEADLINES.addKeyword();"/>
+
+
+
+
+			<menuitem
+				id="farkyDoFriend"
+				label="Add Friend..."
+				accesskey="A" 
+				oncommand="FARKY_COMMENTS.doFriend();"/>
+
+			<menuitem
+				id="farkyMarkUser"
+				label="Mark user's comments"
+				accesskey="M" 
+				oncommand="FARKY_COMMENTS.markUser(true);"/>
+
+			<menuitem
+				id="farkyUnmarkUser"
+				label="Unmark user's comments"
+				accesskey="U" 
+				oncommand="FARKY_COMMENTS.markUser(false);"/>
+		</menupopup>
+	</menu>
+    </popup>
+</overlay>
+

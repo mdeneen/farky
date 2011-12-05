@@ -1,0 +1,27 @@
+/*
+ * This CSS changes the colors of TotalFark headlines. Normally
+ * they are black, red, or green -- depending on the state of
+ * admin approval. Colorblind users may be unable to tell the
+ * difference between red and green, and/or red and black.
+ *
+ * The colors here shift red towards orange, and green towards
+ * blue. The luminosity of the green is also increased, to help
+ * it stand out from the darker red/black.
+ */
+@-moz-document	url-prefix(http://www.fark.com/),
+		url-prefix(https://www.fark.com/),
+		url-prefix(http://total.fark.com/),
+		url-prefix(https://total.fark.com/)
+{
+    /* red */
+    /* color: #8c3906 !important; ...too dark */
+    .headlinerej {
+	color: #b34e08 !important;
+    }
+
+    /* green */
+    /* color: #00ccc0 !important; ...too bright */
+    .headlineapp, .headlinelive {
+	color: #00a69c !important;
+    }
+}

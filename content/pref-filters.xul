@@ -1,0 +1,95 @@
+<?xml version="1.0"?>
+<?xml-stylesheet href="chrome://global/skin/" type="text/css"?>
+
+<dialog
+	buttons="accept, cancel"
+	id="farky-filters-dialog"
+        ondialogaccept="return FARKY_FILTERS.save();"
+	title="Farky - Keyword Filter"
+	orient="vertical"
+	xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul">
+
+<script type="application/x-javascript" src="chrome://farky/content/data.js"/>
+<script type="application/x-javascript" src="chrome://farky/content/main.js"/>
+<script type="application/x-javascript" src="chrome://farky/content/pref-colors.js"/>
+<script type="application/x-javascript" src="chrome://farky/content/pref-filters.js"/>
+
+<grid>
+	<columns>
+		<column flex="1"/>
+		<column flex="1"/>
+	</columns>
+
+	<rows>
+	    <row align="center">
+		<label value="Keyword:"/>
+
+		<!-- stopping the event bubble prevents Enter from triggering the dialog's "ok" button. -->
+		<textbox id="keyword" rows="1" maxlength="40" value="" onkeypress="event.preventBubble();"/>
+	    </row>
+
+	    <row align="center">
+		<label value="Found in:"/>
+		<menulist id="where">
+		    <menupopup>
+			<menuitem value="headline"  label="Headline" selected="true"/>
+			<menuitem value="newsflash" label="NewsFlash headline"/>
+			<menuitem value="artlink"   label="Article URL"/>
+			<menuitem value="farktag"   label="Fark tag"/>
+		    </menupopup>
+		</menulist>
+	    </row>
+
+
+	    <row align="center">
+		<label value="Action:"/>
+		<hbox>
+			<menulist id="action"  oncommand="document.getElementById('hilight_colorpicker').setAttribute('style', 'visibility: ' + (this.value == 'hilight' ? 'visible' : 'hidden'));">
+			    <menupopup>
+				<menuitem value="hide"    label="Delete" selected="true"/>
+				<menuitem value="hilight" label="Hilight"/>
+				<menuitem value="star"    label="Add star"/>
+			    </menupopup>
+			</menulist>
+
+			<spacer style="width: 1em"/>
+
+			<colorpicker type="button" id="hilight_colorpicker" style="visibility: hidden"/>
+		</hbox>
+	    </row>
+	</rows>
+</grid>
+
+<spacer style="height: 2em"/>
+
+<!-- center alignment because otherwise the textbox is stretched vertically, and text alignment is odd. -->
+<hbox align="center">
+	<label value="Filter duration:"/>
+	<menulist id="filtertime"  oncommand="
+			var cb=document.getElementById('autodelete'); 
+			if (this.value == '0')       { cb.checked = true;  cb.disabled = true; }
+			else if (this.value == '-1') { cb.checked = false; cb.disabled = true; }
+			else                         { cb.checked = false; cb.disabled = false;}
+			">
+
+		<menupopup>
+			<menuitem label="1 hour"   value="3600"/>
+			<menuitem label="3 hours"  value="10800"/>
+			<menuitem label="6 hours"  value="21600" selected="true"/>
+			<menuitem label="12 hours" value="43200"/>
+			<menuitem label="1 day"    value="86400"/>
+			<menuitem label="2 days"   value="172800"/>
+			<menuitem label="3 days"   value="259200"/>
+			<menuitem label="1 week"   value="604800"/>
+			<menuitem label="2 weeks"  value="1209600"/>
+			<menuitem label="Forever"      value="-1"/>
+			<menuitem label="This Session" value="0"/>
+		</menupopup>
+	</menulist>
+</hbox>
+
+<checkbox id="autodelete" label="Delete filter when it expires"/>
+
+<checkbox id="timereset" label="Reset filter start time" hidden="true" checked="true"/>
+
+</dialog>

@@ -1,0 +1,123 @@
+/*@-moz-document	url-prefix(http://www.fark.com/comments),
+								url-prefix(https://www.fark.com/comments)
+{*/
+    /*
+     * Suppress the BR's before and after the DIV.ctext. These cause white bars
+     * between the comment and headers bars, which can't be colored (for friends).
+     * We cleverly hide them all with the first rule. The second rule restores the
+     * spacing, but via DIV padding on the DIV (which takes on the DIV's background).
+     *
+     * Also added 3px of margin (not colored) on the bottom. Otherwise the mark-user border
+     * is truncated on the bottom. Also gives a little visual break between comment and next
+     * header.
+     */
+/*    .ctable ~ BR, .ctableTF ~ BR {
+	display: none;
+    }
+	.ctext + br + a[name]
+	{
+		display: none;
+	}
+
+    .ctext {
+	padding-top: 1em !important;
+	padding-bottom: 1em !important;
+	margin-bottom: 5px !important;
+    }
+*/
+
+   /*
+    * Force the background of the username link (to profile) to be transparent, so that
+    * we can change the background color of the header nicely.
+    */
+/*    .clogin a, .clogin a:visited, .clogin a:hover {
+	background-color: transparent !important;
+    }
+*/
+   /*
+    * Force the background of links in comments be transparent, so that
+    * the coloring of friends shows through.
+    */
+/*    .ctext a, .ctext a:visited, .ctext a:hover {
+	background-color: transparent !important;
+    }*/
+/*}*/
+
+
+@-moz-document	url-prefix(http://www.fark.com/),
+		url-prefix(https://www.fark.com/),
+		url-prefix(http://total.fark.com/),
+		url-prefix(https://total.fark.com/),
+		url-prefix(http://www.foobies.com/),
+		url-prefix(https://www.foobies.com/)
+{
+/*    .headlineRow TD~TD~TD~TD {
+	-moz-binding: url("chrome://farky/content/headlines_xbl.xml#icons_binding");
+	text-align: right ! important;
+	width: 137px ! important;
+	min-width: 137px ! important;
+	padding-right: 6px ! important;
+    }
+*/
+/*    .dateheader[align="right"] {
+	-moz-binding: url("chrome://farky/content/headlines_xbl.xml#controller_binding");
+    }
+*/
+    /* Remove inter-cell gaps which are visible with greenbar effect. */
+/*    .nilink {
+	border-spacing: 0 ! important;
+   }
+*/
+    /* Remove forced-white background color on link text, looks bad on greenbar effect. */
+/*    .nilink A {
+	background-color: transparent !important;
+   }
+*/
+    /* ...and also for TotalFark headlines */
+/*    .headlinenew, .headlinerej, .headlineapp, .headlinelive {
+	background-color: transparent !important;
+    }
+*/
+/*    #star_icon {
+	height: 13px;
+	width: 13px;
+	padding-right: 4px;
+	padding-bottom: 1px;
+    }
+
+    #new_icon {
+	height: 9px;
+	width: 21px;
+	padding-right: 4px;
+	padding-bottom: 2px;
+    }
+
+    #posted_icon {
+	height: 12px;
+	width: 13px;
+	padding-right: 4px;
+	padding-bottom: 1px;
+    }
+
+    #newthread_icon {
+	height: 14px;
+	width: 13px;
+	padding-right: 4px;
+    }
+*/    
+}
+/*
+@-moz-document	url-prefix(http://www.fark.com/comments)
+{
+    .headlineRow TD~TD~TD~TD {
+	text-align:left ! important;
+	width: auto ! important;
+	min-width: auto ! important;
+	-moz-binding: none;
+    }
+
+    .dateheader[align="right"] {
+	-moz-binding: none;
+    }
+}
+*/

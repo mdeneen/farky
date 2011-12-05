@@ -1,0 +1,962 @@
+<?xml version="1.0"?>
+<bindings xmlns="http://www.mozilla.org/xbl"
+		xmlns:html="http://www.w3.org/1999/xhtml"
+		xmlns:xbl="http://www.mozilla.org/xbl"
+    xmlns:xul="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul"
+    xmlns:svg="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"
+    >
+
+	<binding id="controller_binding" inheritstyle="false">
+		<implementation name="controller">
+			<field readonly="true" name="_star_enabled"/>
+			<field readonly="true" name="_star_src"/>
+			<field readonly="true" name="_new_enabled"/>
+			<field readonly="true" name="_new_src"/>
+			<field readonly="true" name="_posted_enabled"/>
+			<field readonly="true" name="_posted_src"/>
+			<field readonly="true" name="_newthread_enabled"/>
+			<field readonly="true" name="_newthread_src"/>
+
+			<!-- style.opacity didn't work, so we just use pre-rendered dim images. -->
+			<field readonly="true" name="_STAR_ON"   > "chrome://farky/skin/star.gif"       </field>
+			<field readonly="true" name="_STAR_DIM"  > "chrome://farky/skin/star_dim.gif"   </field>
+			<field readonly="true" name="_NEW_ON"    > "chrome://farky/skin/new.gif"        </field>
+			<field readonly="true" name="_NEW_DIM"   > "chrome://farky/skin/new_dim.gif"    </field>
+			<field readonly="true" name="_POSTED_ON" > "chrome://farky/skin/posted.gif"     </field>
+			<field readonly="true" name="_POSTED_DIM"> "chrome://farky/skin/posted_dim.gif" </field>
+			<field readonly="true" name="_NEWTHREAD_ON" > "chrome://farky/skin/newthread.gif"     </field>
+			<field readonly="true" name="_NEWTHREAD_DIM"> "chrome://farky/skin/newthread_dim.gif" </field>
+
+			<field readonly="true" name="_controllerNum"/>
+			<field readonly="true" name="_prevController"/>
+			<field readonly="true" name="_nextController">null</field>
+			<field readonly="true" name="_childHeadlines"/>
+			<field readonly="true" name="_hiddenHeadlines">0</field>
+			<field readonly="true" name="_sectionVisible">true</field>
+
+
+			<constructor>
+			</constructor>
+
+            <property name="initialized">
+				<getter>
+					return this._initialized;
+				</getter>
+				<setter>
+					<![CDATA[
+					if (val) {
+						this._initialized = true;
+					} else {
+						this._initialized = false;
+					}
+					return val; // allow for a=b=c
+					]]>
+				</setter>
+			</property>
+
+			<!-- XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX -->
+
+
+			<property name="star_enabled">
+				<getter>
+					return this._star_enabled;
+				</getter>
+				<setter>
+					<![CDATA[
+					if (val) {
+						this._star_enabled = true;
+						this._star_src = this._STAR_ON;
+					} else {
+						this._star_enabled = false;
+						this._star_src = this._STAR_DIM;
+					}
+
+					// Need to call setAttribute (which is different from .property) so
+					// that the attribute forwarding/inheritance works.
+					this.setAttribute("star_src", this._star_src);
+
+					for (var i = 0; i < this._childHeadlines.length; i++) {
+						this._childHeadlines[i].setFilter("star", val);
+					}
+
+					return val; // allow for a=b=c
+					]]>
+				</setter>
+			</property>
+
+			<property name="new_enabled">
+				<getter>
+					return this._new_enabled;
+				</getter>
+				<setter>
+					<![CDATA[
+					if (val) {
+						this._new_enabled = true;
+						this._new_src = this._NEW_ON;
+					} else {
+						this._new_enabled = false;
+						this._new_src = this._NEW_DIM;
+					}
+
+					// Need to call setAttribute (which is different from .property) so
+					// that the attribute forwarding/inheritance works.
+					this.setAttribute("new_src", this._new_src);
+
+					for (var i = 0; i < this._childHeadlines.length; i++) {
+						this._childHeadlines[i].setFilter("newcomments", val);
+					}
+
+					return val; // allow for a=b=c
+					]]>
+				</setter>
+			</property>
+
+			<property name="posted_enabled">
+				<getter>
+					return this._posted_enabled;
+				</getter>
+				<setter>
+					<![CDATA[
+					if (val) {
+						this._posted_enabled = true;
+						this._posted_src = this._POSTED_ON;
+					} else {
+						this._posted_enabled = false;
+						this._posted_src = this._POSTED_DIM;
+					}
+
+					// Need to call setAttribute (which is different from .property) so
+					// that the attribute forwarding/inheritance works.
+					this.setAttribute("posted_src", this._posted_src);
+
+					for (var i = 0; i < this._childHeadlines.length; i++) {
+						this._childHeadlines[i].setFilter("posted", val);
+					}
+
+					return val; // allow for a=b=c
+					]]>
+				</setter>
+			</property>
+
+			<property name="newthread_enabled">
+				<getter>
+					return this._newthread_enabled;
+				</getter>
+				<setter>
+					<![CDATA[
+					if (val) {
+						this._newthread_enabled = true;
+						this._newthread_src = this._NEWTHREAD_ON;
+					} else {
+						this._newthread_enabled = false;
+						this._newthread_src = this._NEWTHREAD_DIM;
+					}
+
+					// Need to call setAttribute (which is different from .property) so
+					// that the attribute forwarding/inheritance works.
+					this.setAttribute("newthread_src", this._newthread_src);
+
+					for (var i = 0; i < this._childHeadlines.length; i++) {
+						this._childHeadlines[i].setFilter("newthreads", val);
+					}
+
+					return val; // allow for a=b=c
+					]]>
+				</setter>
+			</property>
+
+
+			<!-- XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX -->
+
+
+			<method name="init">
+				<parameter name="filter"/>
+				<parameter name="controllerNum"/>
+				<parameter name="prevController"/>
+				<body>
+                    if (! this.initialized)
+                    {
+     				   this._childHeadlines = new Array();
+                       this.initialized = true;
+ 					   this.controllerSyncer('initialized', this.initialized);
+                    }
+					this.star_enabled   = filter.star;
+					this.new_enabled    = filter.newcomments;
+					this.posted_enabled = filter.posted;
+					this.newthread_enabled = filter.newthreads;
+					this._controllerNum = controllerNum;
+
+					this._prevController = prevController;
+					if (prevController) {
+						prevController._nextController = this;
+					}
+				</body>
+			</method>
+
+
+			<method name="toggleStar">
+				<body>
+					// Note that this always runs w/o chrome priv.
+					if (this.star_enabled) {
+						this.star_enabled = false;
+					} else {
+						this.star_enabled = true;
+					}
+					this.controllerSyncer('star_enabled', this.star_enabled);
+				</body>
+			</method>
+
+			<method name="toggleNew">
+				<body>
+					// Note that this always runs w/o chrome priv.
+					if (this.new_enabled) {
+						this.new_enabled = false;
+					} else {
+						this.new_enabled = true;
+					}
+					this.controllerSyncer('new_enabled', this.new_enabled);
+				</body>
+			</method>
+
+			<method name="togglePosted">
+				<body>
+					// Note that this always runs w/o chrome priv.
+					if (this.posted_enabled) {
+						this.posted_enabled = false;
+					} else {
+						this.posted_enabled = true;
+					}
+					this.controllerSyncer('posted_enabled', this.posted_enabled);
+				</body>
+			</method>
+
+			<method name="toggleNewthread">
+				<body>
+					// Note that this always runs w/o chrome priv.
+					if (this.newthread_enabled) {
+						this.newthread_enabled = false;
+					} else {
+						this.newthread_enabled = true;
+					}
+					this.controllerSyncer('newthread_enabled', this.newthread_enabled);
+				</body>
+			</method>
+
+
+
+			<method name="controllerSyncer">
+				<parameter name="what"/>
+				<parameter name="state"/>
+				<body>
+					var delay = 50;
+					var delayStep = 10;
+
+					// First update all the previous sections.
+					// (Note that this section was already updated by caller)
+					var controller = this._prevController;
+					while (controller) {
+						setTimeout(controller.controllerThread, delay, controller, what, state);
+						delay += delayStep; // just to make them execute in-order, may not be needed
+						controller = controller._prevController;
+					}
+
+					// Next update all the following sections
+					controller = this._nextController;
+					while (controller) {
+						setTimeout(controller.controllerThread, delay, controller, what, state);
+						delay += delayStep; // just to make them execute in-order, may not be needed
+						controller = controller._nextController;
+					}
+				</body>
+			</method>
+
+			<method name="controllerThread">
+				<parameter name="controller"/>
+				<parameter name="what"/>
+				<parameter name="state"/>
+				<body>
+					// called via setTimeout
+					controller[what] = state;
+				</body>
+			</method>
+
+			<method name="registerHeadline">
+				<parameter name="headline"/>
+				<parameter name="hidden"/>
+				<body>
+					this._childHeadlines.push(headline);
+
+					if (hidden) { this._hiddenHeadlines++; }
+				</body>
+			</method>
+
+			<method name="childVisibilityChange">
+				<parameter name="childHidden"/>
+				<body>
+					<![CDATA[
+					if (childHidden) {
+						this._hiddenHeadlines++;
+					} else {
+						this._hiddenHeadlines--;
+					}
+
+					this.checkVisibility();
+					]]>
+				</body>
+			</method>
+
+
+			<method name="checkVisibility">
+				<body>
+					<![CDATA[
+					// Hiding just the inner TR causes the column sizes to get all goofy
+					var topmostTR = this.parentNode.parentNode.parentNode.parentNode.parentNode;;
+
+					if (this._hiddenHeadlines == this._childHeadlines.length) {
+						// Never hide the first section.
+						if (this._controllerNum != 1) {
+							this._sectionVisible = false;
+							topmostTR.style.display="none";
+						}
+					} else {
+						// First section never hidden.
+						if (this._controllerNum != 1) {
+							this.sectionVisible = true;
+							topmostTR.style.display="table-row";
+						}
+					}
+					]]>
+				</body>
+			</method>
+
+		</implementation>
+
+
+		<!--
+		- Note that the onclick called is called from chrome (document==XULDocument), but if it
+		- calls a method up above, it switches to unprivileged mode (document == HTMLDocument),
+		- and we can't directly modify the image style/src there [even if we explicitly pass 'this']
+		-->
+		<content>
+			<html:span style="display: none;"><children/></html:span>
+
+			<html:img id="star_icon"
+				xbl:inherits="src=star_src"
+				src = "chrome://farky/skin/star_invis.gif"
+				onclick = "this.parentNode.toggleStar();"/>
+			<html:img id="new_icon"
+				xbl:inherits="src=new_src"
+				src = "chrome://farky/skin/new_invis.gif"
+				onclick = "this.parentNode.toggleNew();"/>
+			<html:img id="posted_icon"
+				xbl:inherits="src=posted_src"
+				src = "chrome://farky/skin/posted_invis.gif"
+				onclick = "this.parentNode.togglePosted();"/>
+			<html:img id="newthread_icon"
+				xbl:inherits="src=newthread_src"
+				src = "chrome://farky/skin/newthread_invis.gif"
+				onclick = "this.parentNode.toggleNewthread();"/>
+		</content>
+	</binding>
+
+
+
+
+
+
+
+
+
+
+	<binding id="icons_binding" inheritstyle="false">
+		<implementation name="icons">
+			<field readonly="true" name="_init">false</field>
+			<field readonly="true" name="_star_showing"/>
+			<fiend readonly="true" name="_star_showing_dim"/>
+			<field readonly="true" name="_star_src"/>
+			<field readonly="true" name="_new_showing"/>
+			<field readonly="true" name="_new_src"/>
+			<field readonly="true" name="_posted_showing"/>
+			<field readonly="true" name="_posted_src"/>
+			<field readonly="true" name="_newthread_showing"/>
+			<field readonly="true" name="_newthread_src"/>
+
+			<field readonly="true" name="_STAR_SHOW_ON" >"chrome://farky/skin/star.gif"        </field>
+			<field readonly="true" name="_STAR_SHOW_OFF">"chrome://farky/skin/star_off.gif"    </field>
+			<field readonly="true" name="_STAR_HIDE"    >"chrome://farky/skin/star_dim.gif"    </field>
+			<field readonly="true" name="_NEW_SHOW"     >"chrome://farky/skin/new.gif"         </field>
+			<field readonly="true" name="_NEW_SHOW_HOT" >"chrome://farky/skin/new_hot.gif"     </field>
+			<field readonly="true" name="_NEW_HIDE"     >"chrome://farky/skin/new_invis.gif"   </field>
+			<field readonly="true" name="_POSTED_SHOW"  >"chrome://farky/skin/posted.gif"      </field>
+			<field readonly="true" name="_POSTED_HIDE"  >"chrome://farky/skin/posted_invis.gif"</field>
+			<field readonly="true" name="_NEWTHREAD_SHOW">"chrome://farky/skin/newthread_simple.gif"</field>
+			<field readonly="true" name="_NEWTHREAD_HIDE">"chrome://farky/skin/newthread_invis.gif" </field>
+
+			<field readonly="true" name="_TR"/>
+			<field readonly="true" name="_articleURL"/>
+			<field readonly="true" name="_farktagSrc"/>
+			<field readonly="true" name="_farktagAlt"/>
+			<field readonly="true" name="_headlineNode"/>
+			<field readonly="true" name="_threadID"/>
+			<field readonly="true" name="_commentsNode"/>
+
+			<field readonly="true" name="_NSFW"/>
+			<field readonly="true" name="_greenlit"/>
+			<field readonly="true" name="_hot_thread"/>
+			<field readonly="true" name="_numComments"/>
+			<field readonly="true" name="_keyword">false</field>
+			<field readonly="true" name="_keywordColor">null</field>
+			<field readonly="true" name="_filter"/>
+			<field readonly="true" name="_greenbar">false</field>
+
+			<field readonly="true" name="_prevHeadline">null</field>
+			<field readonly="true" name="_nextHeadline">null</field>
+			<field readonly="true" name="_controller"/>
+			<field readonly="true" name="_thrdata"/>
+
+
+			<constructor></constructor>
+			
+			<!-- ff3 was running the constructor at a different place than ff2.
+          i think they get constructed before the other thing that needs constructing!
+          so confused.  -->
+			<method name="ghettoConstructor">
+		    <body>
+                if (typeof this.iconsBindingsInit == 'undefined')
+                {
+                    //
+                    // Run through the headline DOM and save refs/values to process later.
+                    //
+                    var TR = this.parentNode;
+
+                    this._TR = TR;
+                    this._articleURL    = TR.cells[0].firstChild.href;
+                    this._farktagSrc    = TR.cells[1].firstChild.src;
+//                    this._farktagAlt    = (TR.cells[1].firstChild.alt).toLowerCase();
+                    this._headlineNode  = TR.cells[2];
+                    // 'this' == 'TR.cells[3]'
+										
+                    //RD 10112010
+//										if ( this.firstChild.href.match("IDBlog"))
+//	                    this._threadID      = "t" + /IDBlog=(\d+)/.exec(this.firstChild.href)[1];
+//										else if ( this.firstChild.href.match("IDParty"))
+//	                    this._threadID      = "t" + /IDParty=(\d+)/.exec(this.firstChild.href)[1];
+//										else
+//	                    this._threadID      = "t" + /IDLink=(\d+)/.exec(this.firstChild.href)[1];
+	                    this._threadID      = "t" + /(\d+)/.exec(this.firstChild.href)[1];
+
+                    this._commentsNode  = this.firstChild.firstChild; // text node, format is "(69)"
+                    this.iconsBindingsInit = true;
+                }
+        </body>
+			</method>
+
+
+			<property name="show_star">
+				<getter>
+					return !this._star_showing_dim;
+				</getter>
+				<setter>
+					// XXX eventually we might want a way to have a 3-way on/off/dim toggle? just on/dim for now
+					if (val) {
+						this._star_showing_dim = false;
+						this._star_showing     = true;
+
+						this._star_src         = this._STAR_SHOW_ON;
+					} else {
+						this._star_showing_dim = true;
+						this._star_showing     = false;
+						this._star_src         = this._STAR_SHOW_OFF;
+					}
+
+					// Need to call setAttribute (which is different from .property) so
+					// that the attribute forwarding/inheritance works.
+					this.setAttribute("star_src",         this._star_src);
+
+					return val; // allow for a=b=c
+				</setter>
+			</property>
+
+
+			<property name="show_new">
+				<getter>
+					return this._new_showing;
+				</getter>
+				<setter>
+					if (val) {
+						this._new_showing = true;
+						if (this._hot_thread) {
+							this._new_src = this._NEW_SHOW_HOT;
+						} else {
+							this._new_src = this._NEW_SHOW;
+						}
+					} else {
+						this._hot_thread  = false;
+						this._new_showing = false;
+						this._new_src     = this._NEW_HIDE;
+					}
+
+					// Need to call setAttribute (which is different from .property) so
+					// that the attribute forwarding/inheritance works.
+					this.setAttribute("new_src",     this._new_src);
+
+					return val; // allow for a=b=c
+				</setter>
+			</property>
+
+
+			<property name="show_posted">
+				<getter>
+					return this._posted_showing;
+				</getter>
+				<setter>
+					this._posted_showing = val;
+					this._posted_src = val ? this._POSTED_SHOW : this._POSTED_HIDE;
+
+					// For attribute forwarding/inheritance works.
+					this.setAttribute("posted_src", this._posted_src);
+
+					// allow for a=b=c
+					return val;
+				</setter>
+			</property>
+
+			<property name="show_newthread">
+				<getter>
+					return this._newthread_showing;
+				</getter>
+				<setter>
+					this._newthread_showing = val;
+					this._newthread_src = val ? this._NEWTHREAD_SHOW : this._NEWTHREAD_HIDE;
+
+					// For attribute forwarding/inheritance works.
+					this.setAttribute("newthread_src", this._newthread_src);
+
+					// allow for a=b=c
+					return val;
+				</setter>
+			</property>
+
+			<property name="isHidden">
+				<getter>
+					return (this._TR.style.display == "none" ? true : false);
+				</getter>
+				<setter>
+					var oldval = (this._TR.style.display == "none" ? true : false);
+
+
+					// Don't bother fiddling with style if it's a NOP
+					if (val != oldval) {
+						if (val) {
+							this._TR.style.display = "none";
+						} else {
+							this._TR.style.display = "table-row";
+						}
+
+						// Only report change if it actually did.
+						if (this._init) { this._controller.childVisibilityChange(val); }
+					}
+
+					return val;
+				</setter>
+			</property>
+
+
+
+
+			<!-- XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX -->
+
+
+
+			<method name="init">
+				<parameter name="filter"/>
+				<parameter name="thrdata"/>
+				<parameter name="keywords"/>
+				<parameter name="pageTime"/>
+				<parameter name="myController"/>
+				<parameter name="prevHeadline"/>
+				<parameter name="firstSeen"/>
+
+				<body>
+					<![CDATA[
+
+					var hasNew, where;
+
+
+					// for (foo in filter) { this._filter[foo] = filter[foo]; }
+					// CRAP! That throws an error about not having access to get an iterator.
+					//
+					// XXX change this! it's just storing a reference, not a copy. probably not good.
+                    if (typeof this.initialized == 'undefined')
+                    {
+                        //
+                        // Run through the headline DOM and save refs/values to process later.
+                        //
+                        var TR = this.parentNode;
+
+                        this._TR = TR;
+                        this._articleURL    = TR.cells[0].firstChild.href;
+                        this._farktagSrc    = TR.cells[1].firstChild.src;
+//                        this._farktagAlt    = (TR.cells[1].firstChild.alt).toLowerCase();
+                        this._headlineNode  = TR.cells[2];
+                        // 'this' == 'TR.cells[3]'
+                        
+		                    //RD 10112010
+//												if ( this.firstChild.href.match("IDBlog"))
+//			                    this._threadID      = "t" + /IDBlog=(\d+)/.exec(this.firstChild.href)[1];
+//												else if ( this.firstChild.href.match("IDParty"))
+//			                    this._threadID      = "t" + /IDParty=(\d+)/.exec(this.firstChild.href)[1];
+//												else
+//			                    this._threadID      = "t" + /IDLink=(\d+)/.exec(this.firstChild.href)[1];
+	                    this._threadID      = "t" + /(\d+)/.exec(this.firstChild.href)[1];
+                        
+                        this._commentsNode  = this.firstChild.firstChild; // text node, format is "(69)"
+                        this.initialized = true;
+                    }
+					this._filter = filter;
+					this._thrdata = thrdata;
+					this._controller = myController;
+					this._prevHeadline = prevHeadline;
+					if (prevHeadline) {
+						prevHeadline._nextHeadline = this;
+						this._greenbar = !prevHeadline._greenbar;
+					}
+
+
+					//
+					// Process thread link stuff first, to get the thread ID and update our record.
+					//
+					//
+					// Determine if this thread has comments posted since the last page update
+					// We only update this when the page modtime changes, so that a refresh of
+					// the same page data doesn't make everything go cold.
+					//
+					// (This works because the Fark article page is only updated every few
+					// minutes, not per-load. If this changes, this code could save a timestamp
+					// for the last time a new comment was seen instead).
+					// XXX hmm, might need this for TF anyway, since the different subpages (eg Commented.html)
+					//     would all have different modtimes, flipping between them could have weird results.
+					//
+
+
+					var numComments = parseInt(this._commentsNode.nodeValue.substring(1,10)); // skip the leading "("
+					if (isNaN(numComments)) { numComments = 9999999; }
+					hasNew = (numComments > thrdata.lastRead)
+					this._numComments = numComments;
+					this._hot_thread = thrdata.hotThread;
+
+					if (pageTime > thrdata.lastSeen) {
+						// Persist the hot state, so that it doesn't go away on reload until
+						// a newer generation of the page is seen.
+						this._hot_thread = thrdata.hotThread = (numComments > thrdata.numComments);
+
+						// XXX save_thread() should probably save it, so that a browser restart keeps state.
+
+						thrdata.lastSeen = pageTime;
+						thrdata.numComments = numComments;
+						// XXX optionally set .lastRead too? (catchup on refresh)
+						// XXX set .stale = true or something, so we conditionally can dump data later?
+					}
+
+
+
+					//
+					// Look at the Fark tag and headline text to see if this is NSFW.
+					//
+					const isBOOBIES = /Boobies/i;
+					const isWEENERS = /Weeners/i;
+					const isNSFW = /\b(NSFW|not safe for work)\b/i;
+
+					if (isBOOBIES.test(this._farktagAlt) ||
+					    isWEENERS.test(this._farktagAlt) ||
+					    isNSFW.test(this._headlineNode.textContent)) {
+						this._NSFW = true;
+					} else {
+						this._NSFW = false;
+					}
+
+
+					// Check keyword filters
+					const isNEWSFLASH = /newsflash/i;
+                    
+					for (var i = 0; i < keywords.length; i++) {
+
+						if (keywords[i].expired) { continue; }
+
+						where = null;
+						switch(keywords[i].where) {
+						    case "newsflash":
+							if (! isNEWSFLASH.test(this._farktagAlt))
+							 { break; }
+							// fallthru
+
+						    case "headline":
+							where = this._headlineNode.textContent.toLowerCase();
+							break;
+
+						    case "farktag":
+							where = this._farktagAlt;
+							break;
+
+						    case "artlink":
+							where = this._articleURL.toLowerCase();
+						}
+
+						// Skip if something went wrong
+						if (where == null) { continue; }
+
+						// Look for the keyword
+						if (where.indexOf(keywords[i].keyword) == -1) { continue; }
+
+						switch(keywords[i].action) {
+						    case "hide":
+							this._keyword = true;
+							break;
+
+						    case "hilight":
+							// _keyword not set, because that causes headline to be hidden.
+							this._keywordColor = keywords[i].color;
+							break;
+
+						    case "star":
+							// Don't set star if the user explicitly turned it off.
+							if (!thrdata.userSetStar) { thrdata.starred = true; }
+							break;
+						}
+
+						// Don't process any more filters
+						break;
+					}
+
+
+					//
+					// Determine if headline is greenlit and active on FarkLite
+					//
+					this._greenlit = false;
+					var spanNode = this._headlineNode.firstChild;
+					if (spanNode && spanNode.nodeName == "SPAN" &&
+					    spanNode.className && spanNode.className == "headlinelive") {
+						this._greenlit = true;
+					}
+
+
+					//
+					// Show how many comments are new.
+					//
+					// We suppress this for new threads (last read = 0) so that the top of the page
+					// isn't always a clutter of "(0+x)". Also, currently we can't process comment
+					// counts that hit non-numeric values (eg, pi), so skip them [Tried "+infinity",
+					// but "&infin;" doesn't work.]
+					//
+					
+					var unreadComments = numComments - thrdata.lastRead;
+					switch(filter.showNewCount) {
+					    case 0:
+						/* Normal format, don't need to alter what Fark HTML gave us. */
+						break;
+	
+					    case 1:
+						/* "Old + New" format. Special cases: "0+4" --> "+4", "4+0" --> "4" */
+						if (numComments == 9999999 || !hasNew) { break; }
+
+						if (thrdata.lastRead != 0) {
+							// \240 octal --> decimal 160 --> &nbsp;
+							this._commentsNode.nodeValue =
+								"(" + thrdata.lastRead + "\240+\240" + unreadComments + ")";
+						} else {
+							/* Suppress "(0+4)". Display Just the new count, "(+4)", instead. */
+							this._commentsNode.nodeValue = "(+" + unreadComments + ")";
+						}
+
+						break;
+
+					    case 2:
+						/* "+New" format. Special case: "+0" --> "4" */
+
+						if (numComments == 9999999) break;
+
+						if (hasNew) {
+							this._commentsNode.nodeValue = "(+" + unreadComments + ")";
+						} else {
+							/* Suppress "(+0). Print total comment count instead. */
+							this._commentsNode.nodeValue = "(" + numComments + ")";
+						}
+						break;
+
+					}
+
+					// XXX - might want to updated read # when there are no new comments, but there
+					// are more than the page indicates (eg, read thread post-headline generation)
+
+					//
+					// Set initial icon states.
+					//
+
+					this.show_star   = thrdata.starred;
+					this.show_new    = hasNew;
+					this.show_posted = thrdata.posted;
+					this.show_newthread = firstSeen;
+
+					this.applyFilters();
+					//this._controller.registerHeadline(this, this.isHidden);
+					this._init = true;
+					]]>
+				</body>
+			</method>
+
+
+			<method name="applyFilters">
+				<body>
+					<![CDATA[
+
+					var filter = this._filter;
+					var hidden = false;
+					var debugColor = "#f0f0f0";
+
+
+					// XXX Here's an interesting idea... When first parsing, set class to a composite string
+					// indicating what filters applied. Eg, TR.className="NSFW+slow+greenlit". Use CSS3
+					// substring selectors to handle hiding stuff. Would need to see if we can add/change
+					// rules dynamically, though.
+
+
+					if ((filter.slow && filter.slowThresh > this._numComments) ||
+					    (filter.greenlit && this._greenlit) ||
+					    (filter.NSFW && this._NSFW) ||
+					    (filter.keywords && this._keyword)) {
+
+						hidden = true;
+					}
+
+
+					// These filters seem more useful as an OR set -- a article only needs to match one
+					// of the filters to get displayed (when one or more filters enabled).
+					if (!hidden && (filter.star || filter.posted || filter.newcomments || filter.newthreads)) {
+						hidden = true;
+
+						if ((filter.star && this._star_showing) ||
+						    (filter.posted && this._posted_showing) ||
+						    (filter.newcomments && this._new_showing) ||
+						    (filter.newthreads && this._newthread_showing)) {
+
+							hidden = false;
+						}
+
+						if (hidden) debugColor = "#f0e0ff"; //light purple
+					}
+
+
+
+					// Make the node hidden or not.
+					var wasHidden = this.isHidden;
+					this.isHidden = hidden;
+
+					if (filter.greenbar) {
+						// If our visibility changed, toggle the greenbarring.
+						if (hidden != wasHidden) {
+							this.toggleGreenbar();
+						}
+						this._TR.style.backgroundColor = this._greenbar ? filter.greenbarColor : "";
+					}
+
+					if (this._keywordColor) {
+						this._TR.style.backgroundColor = this._keywordColor;
+					}
+
+					if (filter.debug) {
+						this.isHidden = false;
+						this._TR.style.backgroundColor = hidden ? debugColor : "";
+					}
+
+					]]>
+				</body>
+			</method>
+
+
+			<method name="toggleGreenbar">
+				<body>
+					<![CDATA[
+
+					this._greenbar = !this._greenbar;
+
+					// If the next headline is hidden, we want to toggle it so it matches
+					// our new value. If the next headline is visible, we want to toggle it
+					// so it contrasts with our state (if we are hidden or not). Thus, we
+					// can simply always toggle the next headline without checking other stuff.
+					//
+					// Note that this propagates changes through the entire headline section.
+					//
+					if (this._init && this._nextHeadline) {
+						this._nextHeadline.toggleGreenbar();
+					}
+					]]>
+				</body>
+			</method>
+
+
+			<method name="setFilter">
+				<parameter name="filterName"/>
+				<parameter name="value"/>
+
+				<body>
+					this._filter[filterName] = value;
+
+					this.applyFilters();
+				</body>
+			</method>
+
+
+<!--			<method name="markAsRead">
+				<body>
+					<![CDATA[
+					var thrdata = this._thrdata;
+
+					// We don't need to check pageTime, because we're not parsing the page data.
+					// FARKY_DATA always has the most recent info in it.
+					thrdata.lastRead = thrdata.numComments;
+
+					// Update headline state
+					this.show_new   = false;
+					this.hot_thread = false;
+
+					if (thrdata.numComments != 9999999) {
+						this._commentsNode.nodeValue = "(" + thrdata.numComments + ")";
+					}
+
+					this.applyFilters();
+					]]>
+				</body>
+			</method>
+-->
+			<method name="toggleStar">
+				<body>
+					return (this.show_star = !this.show_star);
+				</body>
+			</method>
+
+		</implementation>
+
+
+		<!--
+			Note that the onclick called is called from chrome (document==XULDocument), but if it
+			calls a method up above, it switched to unprivileged mode (document == HTMLDocument),
+			and we can't modify the image style/src [even if we explicitly pass 'this']
+			....at least this used to be true. Might not be now that binding is done via chrome CSS?
+		-->
+		<content>
+			<children/>
+
+			<html:img id="star_icon" xbl:inherits="src=star_src"
+				onclick="var state = this.parentNode.toggleStar();
+					this.parentNode._thrdata.starred = state;
+					this.parentNode._thrdata.userSetStar = true;"
+				src="chrome://farky/skin/star_invis.gif"/>
+			<html:img id="new_icon" xbl:inherits="src=new_src"
+				src="chrome://farky/skin/new_invis.gif"/>
+			<html:img id="posted_icon" xbl:inherits="src=posted_src"
+				src="chrome://farky/skin/posted_invis.gif"/>
+			<html:img id="newthread_icon" xbl:inherits="src=newthread_src"
+				src = "chrome://farky/skin/newthread_invis.gif"/>
+		</content>
+	</binding>
+</bindings>

@@ -1,0 +1,91 @@
+<?xml version="1.0"?>
+<?xml-stylesheet href="chrome://global/skin/" type="text/css"?>
+
+<dialog
+	buttons="accept, cancel"
+	id="farky-friends-dialog"
+        ondialogaccept="return FARKY_FRIENDS.save();"
+        onload="FARKY.init(); FARKY_FRIENDS.init();"
+	title="Farky - "
+	orient="vertical"
+	xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul">
+
+<script type="application/x-javascript" src="chrome://farky/content/data.js"/>
+<script type="application/x-javascript" src="chrome://farky/content/main.js"/>
+<script type="application/x-javascript" src="chrome://farky/content/pref-colors.js"/>
+<script type="application/x-javascript" src="chrome://farky/content/pref-friends.js"/>
+
+
+<grid>
+	<columns>
+		<column/>
+		<column/>
+	</columns>
+
+	<rows>
+		<row align="center">
+			<label id="nametype" value="(changeme)"/>
+			<textbox id="nameBox" rows="1" maxlength="40" value="" style="width: 35em;"
+				oninput="FARKY_FRIENDS.update_sampleTextUser();"/>
+		</row>
+
+		<row id="noteRow" align="center">
+			<label value="Note:"/>
+			<textbox id="noteBox" rows="1" maxlength="80" value="" style="width: 35em;"
+				oninput="FARKY_FRIENDS.update_sampleTextNote();"/>
+		</row>
+
+		<row id="groupChoice" align="center">
+			<label value="Group name:"/>
+			<hbox>
+				<menulist id="groupPicker"
+					oncommand="FARKY_FRIENDS.colorChoice.style.visibility =
+						(this.label == 'Individual Color...') ? 'visible' : 'hidden';
+						FARKY_FRIENDS.update_sampleTextColor();">
+					<menupopup id="groupMenu">
+						<menuitem label="Individual Color..."/>
+					</menupopup>
+				</menulist>
+				<spacer flex="1"/>
+			</hbox>
+		</row>
+
+		<row id="colorChoice" align="center">
+			<label value="Color:"/>
+			<hbox>
+				<colorpicker type="button" id="colorPicker" onchange="FARKY_FRIENDS.update_sampleTextColor();"/>
+				<spacer flex="1"/>
+			</hbox>
+		</row>
+	</rows>
+</grid>
+
+<spacer style="height: 1em;"/>
+
+<label value="Sample text:" style="font-weight: bold;"/>
+<vbox id="testbox" style="color: black; background-color: white; width: 45em;">
+
+	<spacer style="height: 1.5em"/>
+
+	<!-- Imitation of the CSS used for a Fark comment. -->
+	<hbox style="background-color: #e0e0e0; font-weight:bold; font-size: 1.05em;
+		font-family: Arial,Helvetica,sans-serif">
+	  <label value="2006-3-14 03:09:26 PM"/>
+	  <spacer style="width: 1.5em"/>
+	  <label value="Some Guy" style="color: #900000" id="sampleUser"/>
+	  <spacer style="width: 1.5em"/>
+	  <label value="" id="sampleNote" style="font-weight: normal; max-width: 15em;" crop="end"/>
+	</hbox>
+
+	<description id="sampleText" style="margin: 0; padding: 11px 2px 11px 2px;">
+	Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Curabitur augue.
+	Suspendi auctor tincidunt metus. In sit amet risus sed est vestibulum dapibus.
+	Aenean molestie, erat sit amet aliquam egestas, orci diam tincidunt sapien. Maecenas in ipsum
+	</description>
+
+	<hbox/>
+	<spacer style="height: 1em"/>
+</vbox>
+
+
+</dialog>

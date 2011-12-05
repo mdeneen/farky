@@ -1,0 +1,14 @@
+#
+# Content (xul/xbl/scripts) is located under ./content in the .XPI
+# Both of the following lines are needed the first for FF2 and the second for FF3 
+#
+content farky    content/
+content farky    content/ contentaccessible=yes
+#
+# The "default" skin is located under ./skin in the XPI
+#
+skin    farky    default     skin/
+#
+# Insert our overlay, which includes menu additions and a <script> that inits everything.
+#
+overlay chrome://browser/content/browser.xul    chrome://farky/content/farkyOverlay.xul
